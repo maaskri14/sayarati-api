@@ -67,13 +67,13 @@ async function handler(req, res) {
         await fetch(sb + '/pdf_credits?user_id=eq.' + userId, {
           method: 'PATCH',
           headers,
-          body: JSON.stringify({ credits: (rows[0].credits || 0) + 1, updated_at: new Date().toISOString() }),
+          body: JSON.stringify({ credits: (rows[0].credits || 0) + 3, updated_at: new Date().toISOString() }),
         });
       } else {
         await fetch(sb + '/pdf_credits', {
           method: 'POST',
           headers,
-          body: JSON.stringify({ user_id: userId, credits: 1, updated_at: new Date().toISOString() }),
+          body: JSON.stringify({ user_id: userId, credits: 3, updated_at: new Date().toISOString() }),
         });
       }
     } else {
