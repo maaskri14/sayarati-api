@@ -103,7 +103,10 @@ async function handler(req, res) {
     }
     res.status(200).json({ ok: true, activated: product });
   } catch (e) {
-    res.status(500).json({ error: String(e) });
+    console.error('Erreur Supabase:', e);
+    console.error('SUPABASE_URL:', process.env.SUPABASE_URL);
+    console.error('Service key present:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
+    res.status(500).json({ error: String(e), message: e.message });
   }
 }
 
