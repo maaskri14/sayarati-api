@@ -33,7 +33,7 @@ module.exports = async function handler(req, res) {
       return;
     }
 
-    const base = 'https://pay.chargily.net/live/api/v2';
+    const base = 'https://pay.chargily.net/api/v2';
     const payload = {
       amount: amounts[product],
       currency: 'dzd',
