@@ -1,5 +1,8 @@
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
@@ -7,7 +10,7 @@ export default async function handler(req, res) {
   const amounts = { credit: 500, premium: 1000 };
   if (!user_id || !amounts[product]) return res.status(400).json({ error: 'Paramètres invalides' });
 
-  const base = process.env.CHARGILY_BASE_URL || 'https://pay.chargily.net/live/api/v2';
+  const base = 'https://pay.chargily.net/api/v2';
 
   try {
     const response = await fetch(base + '/checkouts', {
@@ -21,14 +24,22 @@ export default async function handler(req, res) {
         currency: 'dzd',
         locale: 'fr',
         description: 'sayarati:' + product + ':' + user_id,
-        success_url: process.env.SUCCESS_URL || 'https://maaskri14.github.io/sayarati-web/',
-        webhook_endpoint: process.env.BASE_URL + '/api/webhook',
+        success_url: 'https://maaskri14.github.io/sayarati-web/?u=' + user_id + '&p=' + product,
+        webhook_endpoint: 'https://sayarati-api.vercel.app/api/webhook',
+        metadata: [{ user_id: user_id, product: product }],
       }),
     });
+    
     const data = await response.json();
-    if (!response.ok || !data.checkout_url) return res.status(502).json({ error: 'Erreur Chargily', details: data });
+    console.log('Réponse Chargily:', JSON.stringify(data));
+    
+    if (!response.ok || !data.checkout_url) {
+      return res.status(502).json({ error: 'Erreur Chargily', status: response.status, details: data });
+    }
+    
     return res.status(200).json({ checkout_url: data.checkout_url });
   } catch (e) {
+    console.error('Exception:', e);
     return res.status(500).json({ error: String(e) });
   }
-}
+};
