@@ -27,7 +27,7 @@ async function handler(req, res) {
   const m1 = String(data.description || '').match(/sayarati:(credit|premium):([A-Za-z0-9-]+)/);
   if (m1) { product = m1[1]; userId = m1[2]; }
   if (!userId) {
-    const m2 = String(data.success_url || '').match(/[?&]u=([A-Za-z0-9-]+)&p=(credit|premium)/);
+    const m2 = String(data.success_url || '').match(/[?&]u=([A-Za-z0-9-]+)&p=(credit|premium)/); 
     if (m2) { userId = m2[1]; product = m2[2]; }
   }
   if (!userId && data.metadata) {
