@@ -7,7 +7,7 @@ function readRawBody(req) {
     req.on('data', (chunk) => { data += chunk; });
     req.on('end', () => resolve(data));
     req.on('error', reject);
-  });
+  }); 
 }
 
 async function handler(req, res) {
